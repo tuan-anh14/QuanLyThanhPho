@@ -10,11 +10,11 @@ public class TTTM extends CongTrinh {
     private String quanLy;
 
     // Getters and Setters
-    public int getTttmId() {
+    public int getTTTMId() {
         return tttmId;
     }
 
-    public void setTttmId(int tttmId) {
+    public void setTTTMId(int tttmId) {
         this.tttmId = tttmId;
     }
 

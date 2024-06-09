@@ -7,8 +7,8 @@ public class KhachSan extends CongTrinh {
     private int duongId;
     private int soPhong;
     private int soPhongConTrong;
-    private String checkin;
-    private String checkout;
+    private int checkin;
+    private int checkout;
     private String quanLy;
 
     // Getters and Setters
@@ -60,19 +60,19 @@ public class KhachSan extends CongTrinh {
         this.soPhongConTrong = soPhongConTrong;
     }
 
-    public String getCheckin() {
+    public int getCheckIn() {
         return checkin;
     }
 
-    public void setCheckin(String checkin) {
+    public void setCheckIn(int checkin) {
         this.checkin = checkin;
     }
 
-    public String getCheckout() {
+    public int getCheckOut() {
         return checkout;
     }
 
-    public void setCheckout(String checkout) {
+    public void setCheckOut(int checkout) {
         this.checkout = checkout;
     }
 

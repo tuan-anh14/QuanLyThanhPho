@@ -6,7 +6,7 @@ public class NguoiDan extends Duong {
     private String ngaySinh;
     private String gioiTinh;
     private String cccd;
-    private int soNha;
+    private String soNha;
     private String ngheNghiep;
 
     // Getters and Setters
@@ -58,11 +58,11 @@ public class NguoiDan extends Duong {
         this.cccd = cccd;
     }
 
-    public int getSoNha() {
+    public String getSoNha() {
         return soNha;
     }
 
-    public void setSoNha(int soNha) {
+    public void setSoNha(String soNha) {
         this.soNha = soNha;
     }
 
