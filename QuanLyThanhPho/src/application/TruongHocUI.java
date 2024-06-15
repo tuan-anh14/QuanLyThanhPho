@@ -33,6 +33,10 @@ public class TruongHocUI extends JFrame {
 
         setTitle("Quản lý trường học");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Hiển thị cửa sổ giữa màn hình
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true); // Hiển thị JFrame khi đã hoàn thành cấu hình
+
         setPreferredSize(new Dimension(800, 600));
 
         JPanel contentPane = new JPanel();

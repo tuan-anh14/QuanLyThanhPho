@@ -8,7 +8,8 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.List;
 
-public class CongVienUI extends JPanel {
+public class CongVienUI extends JFrame {
+
     private CongVienDAO congVienDAO;
 
     private JTextField txtId;
@@ -27,16 +28,53 @@ public class CongVienUI extends JPanel {
     private JTable tblCongVien;
     private CongVienTableModel tableModel;
 
+    private JScrollPane scrollPane; // Declare scrollPane as a class-level field
+
     public CongVienUI() {
         congVienDAO = new CongVienDAO();
 
+        setTitle("Quản lý Công viên");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
         initializeComponents();
+        setupLayout();
         loadData();
+
+        setLocationRelativeTo(null); // Center the JFrame on screen
     }
 
     private void initializeComponents() {
-        setLayout(new BorderLayout());
+        txtId = new JTextField(10);
+        txtTen = new JTextField(20);
+        txtSoDiaChi = new JTextField(20);
+        txtDuongId = new JTextField(10);
+        txtSoKhachMotNgay = new JTextField(10);
+        txtDienTich = new JTextField(10);
+        txtQuanLy = new JTextField(20);
 
+        btnLuu = new JButton("Lưu");
+        btnLuu.addActionListener(e -> saveCongVien());
+
+        btnXoa = new JButton("Xoá");
+        btnXoa.addActionListener(e -> deleteCongVien());
+
+        btnCapNhat = new JButton("Cập nhật");
+        btnCapNhat.addActionListener(e -> updateCongVien());
+
+        btnTimKiem = new JButton("Tìm kiếm");
+        btnTimKiem.addActionListener(e -> findCongVienById());
+
+        tableModel = new CongVienTableModel(congVienDAO.findAllCongVien());
+        tblCongVien = new JTable(tableModel);
+
+        // Initialize scrollPane here
+        scrollPane = new JScrollPane(tblCongVien);
+        scrollPane.setPreferredSize(new Dimension(700, 400));
+    }
+
+    private void setupLayout() {
         JPanel pnlInput = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -47,7 +85,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho ID
         pnlInput.add(new JLabel("ID:"), gbc);
         gbc.gridx++;
-        txtId = new JTextField(10);
         pnlInput.add(txtId, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -55,7 +92,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho Tên
         pnlInput.add(new JLabel("Tên:"), gbc);
         gbc.gridx++;
-        txtTen = new JTextField(20);
         pnlInput.add(txtTen, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -63,7 +99,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho Số địa chỉ
         pnlInput.add(new JLabel("Số địa chỉ:"), gbc);
         gbc.gridx++;
-        txtSoDiaChi = new JTextField(20);
         pnlInput.add(txtSoDiaChi, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -71,7 +106,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho ID Đường
         pnlInput.add(new JLabel("ID Đường:"), gbc);
         gbc.gridx++;
-        txtDuongId = new JTextField(10);
         pnlInput.add(txtDuongId, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -79,7 +113,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho Số khách một ngày
         pnlInput.add(new JLabel("Số khách một ngày:"), gbc);
         gbc.gridx++;
-        txtSoKhachMotNgay = new JTextField(10);
         pnlInput.add(txtSoKhachMotNgay, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -87,7 +120,6 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho Diện tích
         pnlInput.add(new JLabel("Diện tích:"), gbc);
         gbc.gridx++;
-        txtDienTich = new JTextField(10);
         pnlInput.add(txtDienTich, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
@@ -95,35 +127,19 @@ public class CongVienUI extends JPanel {
         // Label và TextField cho Quản lý
         pnlInput.add(new JLabel("Quản lý:"), gbc);
         gbc.gridx++;
-        txtQuanLy = new JTextField(20);
         pnlInput.add(txtQuanLy, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
 
         // Button panel
         JPanel pnlButtons = new JPanel();
-        btnLuu = new JButton("Lưu");
-        btnLuu.addActionListener(e -> saveCongVien());
         pnlButtons.add(btnLuu);
-
-        btnXoa = new JButton("Xoá");
-        btnXoa.addActionListener(e -> deleteCongVien());
         pnlButtons.add(btnXoa);
-
-        btnCapNhat = new JButton("Cập nhật");
-        btnCapNhat.addActionListener(e -> updateCongVien());
         pnlButtons.add(btnCapNhat);
-
-        btnTimKiem = new JButton("Tìm kiếm");
-        btnTimKiem.addActionListener(e -> findCongVienById());
         pnlButtons.add(btnTimKiem);
 
-        // Table panel
-        tableModel = new CongVienTableModel(congVienDAO.findAllCongVien());
-        tblCongVien = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(tblCongVien);
-
-        // Add components to the main panel
+        // Main panel layout
+        setLayout(new BorderLayout());
         add(pnlInput, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(pnlButtons, BorderLayout.SOUTH);
@@ -240,22 +256,48 @@ public class CongVienUI extends JPanel {
             fireTableDataChanged();
         }
 
+        public int getRowCount() {
+            return congVienList.size();
+        }
 
-		public int getRowCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
+        public int getColumnCount() {
+            return columnNames.length;
+        }
 
-		
-		public int getColumnCount() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
+        public String getColumnName(int columnIndex) {
+            return columnNames[columnIndex];
+        }
 
-		
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            CongVien congVien = congVienList.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return congVien.getCongVienId();
+                case 1:
+                    return congVien.getTen();
+                case 2:
+                    return congVien.getSoDiaChi();
+                case 3:
+                    return congVien.getDuongId();
+                case 4:
+                    return congVien.getSoKhachMotNgay();
+                case 5:
+                    return congVien.getDienTich();
+                case 6:
+                    return congVien.getQuanLy();
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                CongVienUI congVienUI = new CongVienUI();
+                congVienUI.setVisible(true);
+            }
+        });
     }
 }

@@ -34,6 +34,10 @@ public class TTTMUI extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null); // Hiển thị cửa sổ giữa màn hình
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true); // Hiển thị JFrame khi đã hoàn thành cấu hình
+
+        // Hiển thị danh sách TTTM ban đầu
+        hienThiDanhSach();
     }
 
     private JPanel createInputPanel() {
@@ -78,18 +82,15 @@ public class TTTMUI extends JFrame {
         JPanel panel = new JPanel();
 
         btnThem = new JButton("Thêm");
-        btnThem.addActionListener(e -> themTTTM());
-
         btnTim = new JButton("Tìm");
-        btnTim.addActionListener(e -> timTTTM());
-
         btnHienThi = new JButton("Hiển thị danh sách");
-        btnHienThi.addActionListener(e -> hienThiDanhSach());
-
         btnSua = new JButton("Sửa");
-        btnSua.addActionListener(e -> suaTTTM());
-
         btnXoa = new JButton("Xoá");
+
+        btnThem.addActionListener(e -> themTTTM());
+        btnTim.addActionListener(e -> timTTTM());
+        btnHienThi.addActionListener(e -> hienThiDanhSach());
+        btnSua.addActionListener(e -> suaTTTM());
         btnXoa.addActionListener(e -> xoaTTTM());
 
         panel.add(btnThem);
@@ -104,40 +105,31 @@ public class TTTMUI extends JFrame {
     private JScrollPane createTablePanel() {
         tableTTTM = new JTable();
         model = new DefaultTableModel();
+
+        String[] columnNames = {"ID", "Tên", "Số địa chỉ", "ID Đường", "Số lượng NV", "Số lượng khách", "Quản lý", "ID Công trình"};
+        model.setColumnIdentifiers(columnNames);
         tableTTTM.setModel(model);
 
-        model.addColumn("ID");
-        model.addColumn("Tên");
-        model.addColumn("Số địa chỉ");
-        model.addColumn("ID Đường");
-        model.addColumn("Số lượng nhân viên");
-        model.addColumn("Số lượng khách một ngày");
-        model.addColumn("Quản lý");
-        model.addColumn("ID Công trình");
-
-        JScrollPane scrollPane = new JScrollPane(tableTTTM);
-        return scrollPane;
+        return new JScrollPane(tableTTTM);
     }
 
     private void themTTTM() {
         TTTM tttm = createTTTMFromInput();
         boolean added = tttmDAO.addTTTM(tttm);
-        if (added) {
-            JOptionPane.showMessageDialog(this, "Thêm TTTM thành công");
-            clearInputFields();
-            hienThiDanhSach();
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm TTTM thất bại");
-        }
+        showResultMessage(added, "Thêm");
     }
 
     private void timTTTM() {
-        int id = Integer.parseInt(tfId.getText().trim());
-        TTTM tttm = tttmDAO.findTTTMById(id);
-        if (tttm != null) {
-            displayTTTMInfo(tttm);
-        } else {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy TTTM có ID " + id);
+        try {
+            int id = Integer.parseInt(tfId.getText().trim());
+            TTTM tttm = tttmDAO.findTTTMById(id);
+            if (tttm != null) {
+                displayTTTMInfo(tttm);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy TTTM có ID " + id);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ID là số nguyên");
         }
     }
 
@@ -146,14 +138,8 @@ public class TTTMUI extends JFrame {
         List<TTTM> tttmList = tttmDAO.findAllTTTM();
         for (TTTM tttm : tttmList) {
             Object[] row = {
-                    tttm.getTTTMId(),
-                    tttm.getTen(),
-                    tttm.getSoDiaChi(),
-                    tttm.getDuongId(),
-                    tttm.getSoLuongNhanVien(),
-                    tttm.getSoLuongKhachMotNgay(),
-                    tttm.getQuanLy(),
-                    tttm.getCongTrinhId()
+                    tttm.getTTTMId(), tttm.getTen(), tttm.getSoDiaChi(), tttm.getDuongId(),
+                    tttm.getSoLuongNhanVien(), tttm.getSoLuongKhachMotNgay(), tttm.getQuanLy(), tttm.getCongTrinhId()
             };
             model.addRow(row);
         }
@@ -162,39 +148,33 @@ public class TTTMUI extends JFrame {
     private void suaTTTM() {
         TTTM tttm = createTTTMFromInput();
         boolean updated = tttmDAO.updateTTTM(tttm);
-        if (updated) {
-            JOptionPane.showMessageDialog(this, "Sửa thông tin TTTM thành công");
-            clearInputFields();
-            hienThiDanhSach();
-        } else {
-            JOptionPane.showMessageDialog(this, "Sửa thông tin TTTM thất bại");
-        }
+        showResultMessage(updated, "Sửa");
     }
 
     private void xoaTTTM() {
-        int id = Integer.parseInt(tfId.getText().trim());
-        boolean deleted = tttmDAO.deleteTTTM(id);
-        if (deleted) {
-            JOptionPane.showMessageDialog(this, "Xoá TTTM thành công");
-            clearInputFields();
-            hienThiDanhSach();
-        } else {
-            JOptionPane.showMessageDialog(this, "Xoá TTTM thất bại");
+        try {
+            int id = Integer.parseInt(tfId.getText().trim());
+            boolean deleted = tttmDAO.deleteTTTM(id);
+            showResultMessage(deleted, "Xoá");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ID là số nguyên");
         }
     }
 
     private TTTM createTTTMFromInput() {
         TTTM tttm = new TTTM();
-
-        tttm.setTTTMId(Integer.parseInt(tfId.getText().trim()));
-        tttm.setTen(tfTen.getText().trim());
-        tttm.setSoDiaChi(tfSoDiaChi.getText().trim());
-        tttm.setDuongId(Integer.parseInt(tfDuongId.getText().trim()));
-        tttm.setSoLuongNhanVien(Integer.parseInt(tfSoLuongNhanVien.getText().trim()));
-        tttm.setSoLuongKhachMotNgay(Integer.parseInt(tfSoLuongKhach.getText().trim()));
-        tttm.setQuanLy(tfQuanLy.getText().trim());
-        tttm.setCongTrinhId(Integer.parseInt(tfCongTrinhId.getText().trim()));
-
+        try {
+            tttm.setTTTMId(Integer.parseInt(tfId.getText().trim()));
+            tttm.setTen(tfTen.getText().trim());
+            tttm.setSoDiaChi(tfSoDiaChi.getText().trim());
+            tttm.setDuongId(Integer.parseInt(tfDuongId.getText().trim()));
+            tttm.setSoLuongNhanVien(Integer.parseInt(tfSoLuongNhanVien.getText().trim()));
+            tttm.setSoLuongKhachMotNgay(Integer.parseInt(tfSoLuongKhach.getText().trim()));
+            tttm.setQuanLy(tfQuanLy.getText().trim());
+            tttm.setCongTrinhId(Integer.parseInt(tfCongTrinhId.getText().trim()));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng cho các trường số nguyên");
+        }
         return tttm;
     }
 
@@ -207,6 +187,16 @@ public class TTTMUI extends JFrame {
         tfSoLuongKhach.setText(String.valueOf(tttm.getSoLuongKhachMotNgay()));
         tfQuanLy.setText(tttm.getQuanLy());
         tfCongTrinhId.setText(String.valueOf(tttm.getCongTrinhId()));
+    }
+
+    private void showResultMessage(boolean result, String action) {
+        if (result) {
+            JOptionPane.showMessageDialog(this, action + " thành công");
+            clearInputFields();
+            hienThiDanhSach();
+        } else {
+            JOptionPane.showMessageDialog(this, action + " thất bại");
+        }
     }
 
     private void clearInputFields() {
@@ -224,8 +214,7 @@ public class TTTMUI extends JFrame {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                TTTMUI frame = new TTTMUI();
-                frame.setVisible(true);
+                new TTTMUI();
             } catch (Exception e) {
                 e.printStackTrace();
             }

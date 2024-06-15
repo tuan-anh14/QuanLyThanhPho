@@ -5,13 +5,12 @@ import dao.BenhVienDAO;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class BenhVienUI extends JPanel {
+public class BenhVienUI extends JFrame {
 
     private JTextField txtBenhVienId;
     private JTextField txtBenhVienTen;
@@ -35,9 +34,17 @@ public class BenhVienUI extends JPanel {
     public BenhVienUI() {
         benhVienDAO = new BenhVienDAO();
 
+        setTitle("Quản lý Bệnh viện");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
+
         initializeComponents();
         setupLayout();
         loadData();
+
+        setLocationRelativeTo(null); // Center the JFrame on screen
     }
 
     private void initializeComponents() {
@@ -87,8 +94,6 @@ public class BenhVienUI extends JPanel {
     }
 
     private void setupLayout() {
-        setLayout(new BorderLayout());
-
         JPanel panelInput = new JPanel(new GridLayout(8, 2, 10, 10));
         panelInput.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -228,50 +233,60 @@ public class BenhVienUI extends JPanel {
         txtSoBenhNhan.setText("");
         txtGiamDoc.setText("");
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                BenhVienUI benhVienUI = new BenhVienUI();
+                benhVienUI.setVisible(true);
+            }
+        });
+    }
 }
 
-//Lớp BenhVienTableModel để hiển thị dữ liệu trong JTable
+// Lớp BenhVienTableModel để hiển thị dữ liệu trong JTable
 class BenhVienTableModel extends AbstractTableModel {
- private List<BenhVien> benhVienList;
- private final String[] columnNames = {"ID", "Tên", "Số địa chỉ", "ID Đường", "Năm thành lập", "Số bác sĩ", "Số bệnh nhân", "Giám đốc"};
+    private List<BenhVien> benhVienList;
+    private final String[] columnNames = {"ID", "Tên", "Số địa chỉ", "ID Đường", "Năm thành lập", "Số bác sĩ", "Số bệnh nhân", "Giám đốc"};
 
- public BenhVienTableModel(List<BenhVien> benhVienList) {
-     this.benhVienList = benhVienList;
- }
+    public BenhVienTableModel(List<BenhVien> benhVienList) {
+        this.benhVienList = benhVienList;
+    }
 
- public int getRowCount() {
-     return benhVienList.size();
- }
+    public int getRowCount() {
+        return benhVienList.size();
+    }
 
- public int getColumnCount() {
-     return columnNames.length;
- }
+    public int getColumnCount() {
+        return columnNames.length;
+    }
 
- public String getColumnName(int columnIndex) {
-     return columnNames[columnIndex];
- }
+    public String getColumnName(int columnIndex) {
+        return columnNames[columnIndex];
+    }
 
- public Object getValueAt(int rowIndex, int columnIndex) {
-     BenhVien benhVien = benhVienList.get(rowIndex);
-     switch (columnIndex) {
-         case 0:
-             return benhVien.getBenhVienId();
-         case 1:
-             return benhVien.getBenhVienTen();
-         case 2:
-             return benhVien.getSoDiaChi();
-         case 3:
-             return benhVien.getDuongId();
-         case 4:
-             return benhVien.getNamThanhLap();
-         case 5:
-             return benhVien.getSoBacSi();
-         case 6:
-             return benhVien.getSoBenhNhan();
-         case 7:
-             return benhVien.getGiamDoc();
-         default:
-             return null;
-     }
- }
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        BenhVien benhVien = benhVienList.get(rowIndex);
+        switch (columnIndex) {
+            case 0:
+                return benhVien.getBenhVienId();
+            case 1:
+                return benhVien.getBenhVienTen();
+            case 2:
+                return benhVien.getSoDiaChi();
+            case 3:
+                return benhVien.getDuongId();
+            case 4:
+                return benhVien.getNamThanhLap();
+            case 5:
+                return benhVien.getSoBacSi();
+            case 6:
+                return benhVien.getSoBenhNhan();
+            case 7:
+                return benhVien.getGiamDoc();
+            default:
+                return null;
+        }
+    }
 }

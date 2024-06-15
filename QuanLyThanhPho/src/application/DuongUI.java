@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class DuongUI extends JPanel {
+public class DuongUI extends JFrame {
 
     private JTextField txtDuongId;
     private JTextField txtTenDuong;
@@ -33,7 +33,11 @@ public class DuongUI extends JPanel {
     }
 
     private void initializeComponents() {
-        setLayout(new BorderLayout());
+        setTitle("Quản lý Đường");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 400);
+        setLocationRelativeTo(null);
+        setVisible(true);
 
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel panelCenter = new JPanel(new BorderLayout());
@@ -207,5 +211,15 @@ public class DuongUI extends JPanel {
             }
             return Object.class;
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                DuongUI duongUI = new DuongUI();
+                duongUI.setVisible(true);
+            }
+        });
     }
 }

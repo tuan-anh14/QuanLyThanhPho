@@ -36,6 +36,11 @@ public class QuanUI extends JFrame {
     public QuanUI() {
         setTitle("Quản lý thông tin quận");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null); // Hiển thị cửa sổ giữa màn hình
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true); // Hiển thị JFrame khi đã hoàn thành cấu hình
+
         setBounds(100, 100, 650, 400);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

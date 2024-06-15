@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
-import java.util.ArrayList;
 
 public class LoginFrame extends JFrame {
     private JTextField emailField;
@@ -28,7 +27,7 @@ public class LoginFrame extends JFrame {
         leftPanel.setLayout(new GridBagLayout());
 
         JLabel avatarLabel = new JLabel();
-        ImageIcon avatarIcon = new ImageIcon("F:\\\\\\\\JAVA\\\\\\\\QuanLyThanhPho-main\\\\\\\\QuanLyThanhPho-main\\\\\\\\QuanLyThanhPho\\\\\\\\images\\\\\\\\icon.png");
+        ImageIcon avatarIcon = new ImageIcon("F:\\JAVA\\QuanLyThanhPho-main\\QuanLyThanhPho-main\\QuanLyThanhPho\\images\\icon.png");
         Image avatarImage = avatarIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         avatarLabel.setIcon(new ImageIcon(avatarImage));
         leftPanel.add(avatarLabel);
@@ -44,7 +43,7 @@ public class LoginFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        JLabel loginLabel = new JLabel("Login");
+        JLabel loginLabel = new JLabel("Đăng nhập");
         loginLabel.setFont(new Font("Arial", Font.BOLD, 24));
         loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridwidth = 2;
@@ -59,6 +58,7 @@ public class LoginFrame extends JFrame {
 
         gbc.gridx = 1;
         emailField = new RoundJTextField(20);
+        emailField.setPreferredSize(new Dimension(250, 30)); // Set preferred size for emailField
         rightPanel.add(emailField, gbc);
 
         gbc.gridx = 0;
@@ -70,6 +70,7 @@ public class LoginFrame extends JFrame {
 
         gbc.gridx = 1;
         passwordField = new RoundJPasswordField(20);
+        passwordField.setPreferredSize(new Dimension(250, 30)); // Set preferred size for passwordField
         rightPanel.add(passwordField, gbc);
 
         gbc.gridx = 1;
@@ -101,19 +102,10 @@ public class LoginFrame extends JFrame {
                 String password = new String(passwordField.getPassword());
 
                 // Simple authentication check
-                if ("admin@example.com".equals(email) && "admin".equals(password)) {
+                if ("admin".equals(email) && "123".equals(password)) {
                     // Show AdminUI on successful login
                     AdminUI adminUI = new AdminUI();
                     adminUI.setVisible(true);
-                    dispose(); // Close the LoginFrame
-                } else if ("user@example.com".equals(email) && "user".equals(password)) {
-                    // Show UserUI on successful login
-                    List<String> objects = new ArrayList<>();
-                    objects.add("TTTM");
-                    objects.add("BenhVien");
-                    objects.add("CongVien");
-                    UserUI userUI = new UserUI(objects);
-                    userUI.setVisible(true);
                     dispose(); // Close the LoginFrame
                 } else {
                     errorLabel.setText("Invalid email or password. Please try again.");
@@ -143,23 +135,19 @@ public class LoginFrame extends JFrame {
 
 class RoundJTextField extends JTextField {
     private Shape shape;
-
     public RoundJTextField(int size) {
         super(size);
         setOpaque(false);
     }
-
     protected void paintComponent(Graphics g) {
         g.setColor(getBackground());
-        g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+        g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
         super.paintComponent(g);
     }
-
     protected void paintBorder(Graphics g) {
         g.setColor(getForeground());
-        g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+        g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
     }
-
     public boolean contains(int x, int y) {
         if (shape == null || !shape.getBounds().equals(getBounds())) {
             shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15);
@@ -170,23 +158,19 @@ class RoundJTextField extends JTextField {
 
 class RoundJPasswordField extends JPasswordField {
     private Shape shape;
-
     public RoundJPasswordField(int size) {
         super(size);
         setOpaque(false);
     }
-
     protected void paintComponent(Graphics g) {
         g.setColor(getBackground());
-        g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+        g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
         super.paintComponent(g);
     }
-
     protected void paintBorder(Graphics g) {
         g.setColor(getForeground());
-        g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+        g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
     }
-
     public boolean contains(int x, int y) {
         if (shape == null || !shape.getBounds().equals(getBounds())) {
             shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15);
